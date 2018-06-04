@@ -1,9 +1,5 @@
 # -*- coding:utf-8 -*-
-import csv
-import logging
-
 import requests
-import time
 from pymongo import MongoClient
 
 headers = {
@@ -49,8 +45,12 @@ def get_info(cid):
         info["video_ids"] = ",".join(res.get("c", {}).get("video_ids", ""))
         # 出版年份
         info["year"] = res.get("c", {}).get("year", "")
-        # 电影简介
-        info["description"] = res.get("c", {}).get("description", "").strip().replace("\n", "").replace("\r", "")
+        try:
+            # 电影简介
+            info["description"] = res.get("c", {}).get("description", "").strip().replace("\n", "").replace("\r", "")
+        except AttributeError:
+            info["description"] = ""
+            print("该电影没有简介")
         # 电影vid
         info["vid"] = res.get("c", {}).get("vid", "")
         # 该电影的精彩片段
@@ -70,6 +70,7 @@ def get_info(cid):
     return info
 
 
+'''
 def save_info():
     with open("movie_id.csv", encoding="utf-8") as f, open("sample.csv", "w", encoding="utf-8", newline="") as sample:
         id_list = [line.strip().split("\t")[-1] for line in f.readlines()]
@@ -85,6 +86,7 @@ def save_info():
             info = get_info(cid)
             csv_f.writerow(info)
             print("正在保存cid：{}".format(info["cid"]))
+'''
 
 
 def save_mongodb(cid, collection_name="demo"):
@@ -109,6 +111,6 @@ def get_cid(file_name):
 if __name__ == '__main__':
     # save_info()
     # 修改要打开的文件，改下set名字，和之前存的区分开
-    cid_gen = get_cid("tv_url.txt")
+    cid_gen = get_cid("tv_url8.txt")
     for cid in cid_gen:
         save_mongodb(cid, collection_name="tv")
