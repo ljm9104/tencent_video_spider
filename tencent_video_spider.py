@@ -42,11 +42,11 @@ def get_info(cid):
         # info["typ"] = ",".join(res["typ"][0]) + ",".join(res["typ"][-1])
         info["typ"] = str(res.get("typ", [])).replace("'", "").replace("[", "").replace("]", "")
         # 主演
-        info["nam"] = str(res.get("nam", [])).replace("'","").replace("[", "").replace("]", "")
+        info["nam"] = str(res.get("nam", [])).replace("'", "").replace("[", "").replace("]", "")
         # 电影亮点
         info["rec"] = res.get("rec", "")
         # 电影video_ids, 有的有上下集,电视剧综艺就是该剧下的分集
-        info["video_ids"] = ",".join(res["c"].get("video_ids", ""))
+        info["video_ids"] = ",".join(res.get("c", {}).get("video_ids", ""))
         # 出版年份
         info["year"] = res.get("c", {}).get("year", "")
         # 电影简介
